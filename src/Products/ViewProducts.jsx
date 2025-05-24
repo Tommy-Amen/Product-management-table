@@ -9,7 +9,7 @@ const initialProductInfo = {
 };
 
 export default function ViewProducts(props) {
-  const [productInfo, setProductInfo] = useState(initialProductInfo);
+  const [productInfo, setProductInfo] = useState([]);
 
   useEffect(() => {
     fetchProductData();
@@ -22,7 +22,7 @@ export default function ViewProducts(props) {
       );
 
       if (response) {
-        setProductInfo(response.data);
+       setProductInfo(response.data);
       }
     } catch (e) {
       console.log(e);

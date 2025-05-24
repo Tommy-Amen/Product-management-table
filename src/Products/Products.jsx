@@ -5,10 +5,14 @@ import axios from "axios";
 
 import { Dialog } from "primereact/dialog";
 import ViewProducts from "./ViewProducts";
+import AddProducts from "./AddProduct";
+import EditProducts from "./EditProduct";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [showViewMode, setShowViewMode] = useState(false);
+  const [showAddMode, setShowAddMode] = useState(false);
+  const [showEditMode, setShowEditMode] = useState(false);
   const [selectProductId, setSelectProductId] = useState(null);
 
   useEffect(() => {
@@ -33,7 +37,7 @@ export default function Products() {
     return (
       <div className="flex items-center gap-4">
         <button
-          className="cursor-pointer hover:scale-120"
+          className="cursor-pointer hover:scale-120 transition-all duration-200"
           onClick={() => {
             setSelectProductId(rowDate.id);
             setShowViewMode(true);
@@ -42,13 +46,16 @@ export default function Products() {
           <i className="pi pi-eye h-4 w-4"></i>
         </button>
         <button
-          className="cursor-pointer hover:scale-120"
-          onClick={() => console.log(rowDate.id)}
+          className="cursor-pointer hover:scale-120 transition-all duration-200"
+          onClick={() => {
+            setSelectProductId(rowDate.id);
+            setShowEditMode(true);
+          }}
         >
           <i className="pi pi-file-edit h-4 w-4"></i>
         </button>
         <button
-          className="cursor-pointer hover:scale-120"
+          className="cursor-pointer hover:scale-120 transition-all duration-200"
           onClick={() => console.log(rowDate.id)}
         >
           <i className="pi pi-trash h-4 w-4"></i>
@@ -58,9 +65,18 @@ export default function Products() {
   };
 
   return (
-    <div className="py-15 px-24 flex flex-col gap-5 h-screen">
+    <div className="py-10 px-24 flex flex-col gap-4 h-screen">
       <h2 className="text-3xl font-bold">All Products</h2>
       <div className="bg-[#fff] p-[20px] shadow-xl rounded-xl">
+        <div className="mb-4 text-right pt-3">
+          <button
+            onClick={() => setShowAddMode(true)}
+            className="bg-black hover:bg-black/85 transition-all duration-300 cursor-pointer shadow text-white text-sm px-3 py-2 rounded"
+          >
+            Add New Product <i className="pi pi-plus ml-2 "></i>
+          </button>
+        </div>
+
         <DataTable
           value={products}
           paginator
@@ -128,6 +144,33 @@ export default function Products() {
         onHide={() => setShowViewMode(false)}
       >
         <ViewProducts productId={selectProductId} />
+      </Dialog>
+      <Dialog
+        header="Add New Product"
+        visible={showAddMode}
+        style={{ width: "40vw" }}
+        onHide={() => setShowAddMode(false)}
+      >
+        <AddProducts
+          setProductAdded={() => {
+            setShowAddMode(false);
+            getAllProducts();
+          }}
+        />
+      </Dialog>
+      <Dialog
+        header="Edit Product"
+        visible={showEditMode}
+        style={{ width: "40vw" }}
+        onHide={() => setShowEditMode(false)}
+      >
+        <EditProducts
+          productId={selectProductId}
+          setProductEdited={() => {
+            setShowEditMode(false);
+            getAllProducts();
+          }}
+        />
       </Dialog>
     </div>
   );
