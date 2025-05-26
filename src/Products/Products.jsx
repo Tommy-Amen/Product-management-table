@@ -21,18 +21,20 @@ export default function Products() {
   const [isLoading, setIsLoading] = useState(false);
   const [showEditMode, setShowEditMode] = useState(false);
   const [selectProductId, setSelectProductId] = useState(null);
+  const [error, setError] = useState(false);
 
   const getAllProducts = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(
+      const response = await fetch(
         "https://mock-data-josw.onrender.com/products"
       );
       if (!response.ok) {
-        console.log("something went wrong");
+        setError(true);
+      } else {
+        const data = await response.json();
+        setProducts(data);
       }
-
-      setProducts(response.data);
     } catch (err) {
       console.log(err);
     } finally {
@@ -116,6 +118,20 @@ export default function Products() {
       console.log(e);
     }
   };
+
+  if (error) {
+    toast.error("Something went wrong. Please try again.", {
+      style: {
+        border: "1px solid #FF0000",
+        padding: "14px",
+        color: "#FF0000",
+      },
+      iconTheme: {
+        primary: "#FF0000",
+        secondary: "#FFFAEE",
+      },
+    });
+  }
 
   return (
     <div className="py-10 px-24 flex flex-col gap-4 h-screen">
