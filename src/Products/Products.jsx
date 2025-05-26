@@ -8,6 +8,9 @@ import ViewProducts from "./ViewProducts";
 import AddProducts from "./AddProduct";
 import EditProducts from "./EditProduct";
 
+import { ConfirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
+
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [showViewMode, setShowViewMode] = useState(false);
@@ -56,12 +59,36 @@ export default function Products() {
         </button>
         <button
           className="cursor-pointer hover:scale-120 transition-all duration-200"
-          onClick={() => console.log(rowDate.id)}
+          onClick={() => deleteProductConfirm(rowDate.id)}
         >
           <i className="pi pi-trash h-4 w-4"></i>
         </button>
       </div>
     );
+  };
+
+  const deleteProductConfirm = (productId) => {
+    confirmDialog({
+      trigger: productId.currentTarget,
+      message: "Are you sure you want to delete product?",
+      header: "Confirmation",
+      icon: "pi pi-trash",
+      accept: () => deleteUser(productId),
+      // reject: () => rejectFunc(),
+    });
+  };
+
+  const deleteUser = async (productId) => {
+    try {
+      const response = await axios.delete(
+        "https://mock-data-josw.onrender.com/products/" + productId
+      );
+      if (response) {
+        getAllProducts();
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -78,6 +105,7 @@ export default function Products() {
         </div>
 
         <DataTable
+          removableSort
           value={products}
           paginator
           rows={10}
@@ -102,6 +130,7 @@ export default function Products() {
             style={{ minWidth: "12rem" }}
           />
           <Column
+            sortable
             header="Price"
             field="price"
             style={{ minWidth: "12rem" }}
@@ -113,8 +142,8 @@ export default function Products() {
             header="Category"
             field="category"
             filterField="category"
-            showFilterMenu={true}
-            filterMenuStyle={{ width: "14rem" }}
+            showFilterMenu={false}
+            filterMenuStyle={{ width: "12rem" }}
             style={{ minWidth: "14rem" }}
             //   body={representativeBodyTemplate}
             filter
@@ -172,6 +201,7 @@ export default function Products() {
           }}
         />
       </Dialog>
+      <ConfirmDialog />
     </div>
   );
 }
