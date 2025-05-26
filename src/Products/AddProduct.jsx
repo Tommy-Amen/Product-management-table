@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { toast } from "react-hot-toast";
 
 const initialProductInfo = {
   name: "",
@@ -9,7 +10,21 @@ const initialProductInfo = {
 };
 
 export default function AddProducts(props) {
-  const [productInfo, setProductInfo] = useState(initialProductInfo);
+  const [productInfo, setProductInfo] = useState({});
+
+  const getAllProducts = async () => {
+    try {
+      const response = await axios.get(
+        "https://mock-data-josw.onrender.com/products"
+      );
+      if (!response.ok) {
+        console.log("something went wrong");
+      }
+      props.setProducts(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const addProductInfo = async () => {
     try {
@@ -18,6 +33,7 @@ export default function AddProducts(props) {
         productInfo
       );
       if (response) {
+        getAllProducts();
         props.setProductAdded();
       }
     } catch (e) {
@@ -32,6 +48,7 @@ export default function AddProducts(props) {
           <div className="flex flex-col">
             <span className="mb-1">Name:</span>
             <input
+              required
               value={productInfo.name}
               onChange={(e) =>
                 setProductInfo({ ...productInfo, name: e.target.value })
@@ -44,6 +61,7 @@ export default function AddProducts(props) {
           <div className="flex flex-col">
             <span className="mb-1">Price: </span>
             <input
+              required
               value={productInfo.price}
               onChange={(e) =>
                 setProductInfo({ ...productInfo, price: e.target.value })
@@ -59,18 +77,20 @@ export default function AddProducts(props) {
           <div className="flex flex-col">
             <span className="mb-1">Category: </span>
             <input
+              required
               value={productInfo.category}
               onChange={(e) =>
                 setProductInfo({ ...productInfo, category: e.target.value })
               }
               type="text"
-              className="border  border-gray-300 text-sm rounded-lg py-2 px-2"
+              className="border border-gray-300 text-sm rounded-lg py-2 px-2"
               placeholder="Enter Product Price"
             />
           </div>
           <div className="flex flex-col">
             <span className="mb-1">Rating: </span>
             <input
+              required
               value={productInfo.rating}
               onChange={(e) =>
                 setProductInfo({ ...productInfo, rating: e.target.value })
@@ -86,6 +106,19 @@ export default function AddProducts(props) {
         <button
           onClick={() => {
             addProductInfo();
+            setTimeout(() => {
+              toast.success("Product Added Successfully", {
+                style: {
+                  border: "1px solid #000",
+                  padding: "14px",
+                  color: "#000",
+                },
+                iconTheme: {
+                  primary: "#000",
+                  secondary: "#FFFAEE",
+                },
+              });
+            }, 1500);
           }}
           className="text-sm shadow hover:bg-black/85 cursor-pointer transition-all duration-200  bg-black text-white px-3 py-2 rounded mt-4"
         >

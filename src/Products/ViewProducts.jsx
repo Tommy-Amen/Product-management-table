@@ -9,7 +9,7 @@ const initialProductInfo = {
 };
 
 export default function ViewProducts(props) {
-  const [productInfo, setProductInfo] = useState([]);
+  const [productInfo, setProductInfo] = useState(initialProductInfo);
 
   useEffect(() => {
     fetchProductData();

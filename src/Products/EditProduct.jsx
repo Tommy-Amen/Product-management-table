@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 const initialProductInfo = {
   id: "",
@@ -12,10 +13,20 @@ const initialProductInfo = {
 export default function EditProducts(props) {
   const [productInfo, setProductInfo] = useState(initialProductInfo);
 
-  useEffect(() => {
-    setProductInfo({ ...productInfo, id: props.productId });
-    fetchProductData();
-  }, []);
+  const getAllProducts = async () => {
+    try {
+      const response = await axios.get(
+        "https://mock-data-josw.onrender.com/products"
+      );
+      if (!response.ok) {
+        console.log("something went wrong");
+      }
+      props.setProducts(response.data);
+      props.setProducts(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const fetchProductData = async () => {
     try {
@@ -39,11 +50,17 @@ export default function EditProducts(props) {
       );
       if (response) {
         props.setProductEdited();
+        getAllProducts();
       }
     } catch (e) {
       console.log(e);
     }
   };
+
+  useEffect(() => {
+    setProductInfo({ ...productInfo, id: props.productId });
+    fetchProductData();
+  }, []);
 
   return (
     <div>
@@ -106,6 +123,19 @@ export default function EditProducts(props) {
         <button
           onClick={() => {
             editProductInfo();
+            setTimeout(() => {
+              toast.success("Product Updated", {
+                style: {
+                  border: "1px solid #000",
+                  padding: "14px",
+                  color: "#000",
+                },
+                iconTheme: {
+                  primary: "#000",
+                  secondary: "#FFFAEE",
+                },
+              });
+            }, 1500);
           }}
           className="text-sm shadow hover:bg-black/85 cursor-pointer transition-all duration-200  bg-black text-white px-3 py-2 rounded mt-4"
         >
