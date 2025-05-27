@@ -13,6 +13,7 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 import { confirmDialog } from "primereact/confirmdialog";
 import { Toaster } from "react-hot-toast";
 import { toast } from "react-hot-toast";
+import { StarIcon } from "lucide-react";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -21,6 +22,7 @@ export default function Products() {
   const [isLoading, setIsLoading] = useState(false);
   const [showEditMode, setShowEditMode] = useState(false);
   const [selectProductId, setSelectProductId] = useState(null);
+  const [favorite, setFavorite] = useState(false);
   const [error, setError] = useState(false);
 
   const getAllProducts = async () => {
@@ -73,6 +75,14 @@ export default function Products() {
         >
           <i className="pi pi-trash h-4 w-4"></i>
         </button>
+        <button
+          onClick={() => {
+            console.log(favorite);
+          }}
+          className="cursor-pointer hover:scale-120 transition-all duration-200"
+        >
+          <i className="pi pi-star"></i>
+        </button>
       </div>
     );
   };
@@ -99,7 +109,6 @@ export default function Products() {
           });
         }, 1500);
       },
-      // reject: () => rejectFunc(),
     });
   };
 
@@ -168,7 +177,6 @@ export default function Products() {
                 "representative.name",
                 "status",
               ]}
-              // header={header}
               emptyMessage="No customers found."
             >
               <Column
@@ -184,8 +192,6 @@ export default function Products() {
                 header="Price"
                 field="price"
                 style={{ minWidth: "12rem" }}
-                //   body={}
-
                 filterPlaceholder="Search by country"
               />
               <Column
@@ -195,9 +201,7 @@ export default function Products() {
                 showFilterMenu={false}
                 filterMenuStyle={{ width: "12rem" }}
                 style={{ minWidth: "14rem" }}
-                //   body={representativeBodyTemplate}
                 filter
-                //   filterElement={representativeRowFilterTemplate}
               />
               <Column
                 field="rating"
@@ -205,14 +209,12 @@ export default function Products() {
                 showFilterMenu={false}
                 filterMenuStyle={{ width: "14rem" }}
                 style={{ minWidth: "12rem" }}
-                //   body={statusBodyTemplate}
-                //   filterElement={statusRowFilterTemplate}
               />
+
               <Column
                 header="Actions"
                 style={{ minWidth: "6rem" }}
                 body={actionTemplate}
-                //   filterElement={verifiedRowFilterTemplate}
               />
             </DataTable>
           </div>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { StarIcon, StarOff } from "lucide-react";
 
 const initialProductInfo = {
   name: "",
@@ -10,6 +11,22 @@ const initialProductInfo = {
 
 export default function ViewProducts(props) {
   const [productInfo, setProductInfo] = useState(initialProductInfo);
+  const [toggleFavorite, setToggleFavorite] = useState(false);
+
+  useEffect(() => {
+    const storedFavoriteProduct =
+      window.localStorage.getItem("favoriteProduct");
+    if (storedFavoriteProduct !== null) {
+      setToggleFavorite(JSON.parse(storedFavoriteProduct));
+    }
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      "favoriteProduct",
+      JSON.stringify(toggleFavorite)
+    );
+  }, [toggleFavorite]);
 
   useEffect(() => {
     fetchProductData();
@@ -22,7 +39,7 @@ export default function ViewProducts(props) {
       );
 
       if (response) {
-       setProductInfo(response.data);
+        setProductInfo(response.data);
       }
     } catch (e) {
       console.log(e);
@@ -50,6 +67,18 @@ export default function ViewProducts(props) {
           <span className="">Rating: </span>
           <span className="font-bold">{productInfo.rating}</span>
         </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-gray-500 font-black">
+          Mark Product as Favorite
+        </span>
+        <button onClick={() => setToggleFavorite(!toggleFavorite)}>
+          {toggleFavorite ? (
+            <StarIcon className="text-yellow-500 cursor-pointer" />
+          ) : (
+            <StarOff className="text-gray-400 cursor-pointer" />
+          )}
+        </button>
       </div>
     </div>
   );
