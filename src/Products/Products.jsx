@@ -75,14 +75,6 @@ export default function Products() {
         >
           <i className="pi pi-trash h-4 w-4"></i>
         </button>
-        <button
-          onClick={() => {
-            console.log(favorite);
-          }}
-          className="cursor-pointer hover:scale-120 transition-all duration-200"
-        >
-          <i className="pi pi-star"></i>
-        </button>
       </div>
     );
   };
