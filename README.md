@@ -13,7 +13,7 @@ To run the project locally:
 ### 1. Clone the repository
 
 ```bash
-git clone (https://github.com/Tommy-Amen/Product-management-table).git
+git clone [https://github.com/Tommy-Amen/Product-management-table](https://github.com/Tommy-Amen/Product-management-table.git)
 cd product-management-table
 ```
 
